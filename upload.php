@@ -123,8 +123,8 @@ if (isset($_POST["submit"])) {
 
         // Masukkan data ke database
         $stmt = $koneksi->prepare("INSERT INTO produk (id_produk, nama_produk, foto_produk, deskripsi_produk, file_produk, kategori_produk, harga_produk, pemilik_produk) 
-                                   VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-        $stmt->bind_param("ssssssis", $idprodukrandom, $namaproduk, $targetFileGambar, $deskripsiproduk, $targetFile, $kategoriproduk, $hargaproduk, $namapemilik);
+                                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param("ssssssiss", $idprodukrandom, $namaproduk, $targetFileGambar, $deskripsiproduk, $targetFile, $kategoriproduk, $hargaproduk, $namapemilik, 'pending');
 
         if ($stmt->execute()) {
             echo "<script>alert('Produk berhasil diunggah.'); window.location.href = 'index.php';</script>";
@@ -135,6 +135,18 @@ if (isset($_POST["submit"])) {
     } else {
         echo "<script>alert('Gagal mengunggah file atau gambar.'); window.history.back();</script>";
     }
+
+
+
+
+
+    
+
+
+
+
+
+
 }
 ?>
 <!DOCTYPE html>

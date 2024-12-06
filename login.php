@@ -127,7 +127,7 @@ if(isset($_POST["submit"])){
 </head>
 <body>
     <div class="container">
-        <h1>Buat Akun Baru</h1>
+        <h1>Masuk ke dalam akun</h1>
         <form action="#" method="POST">
             <div class="form-group">
                 <label for="username">Username</label>

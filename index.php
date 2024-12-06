@@ -1,6 +1,13 @@
 <?php 
 include "conn123.php";
 session_start();
+$usernameuser = $_SESSION['username'];
+
+$cekdatauser = "SELECT  * FROM account WHERE username  = '$usernameuser'";
+$conncekdatauser = mysqli_query($koneksi, $cekdatauser);
+while($datauser = mysqli_fetch_array($conncekdatauser)){
+    $iduser = $datauser['id_user'];
+}
 
 
 ?>
@@ -65,7 +72,6 @@ session_start();
 
                            <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="navbarLightDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">Kategori</a>
-
                                 <ul class="dropdown-menu dropdown-menu-light" aria-labelledby="navbarLightDropdownMenuLink">
                                     <li><a class="dropdown-item" href="kategori.php?string=softwareapp">Software App</a></li>
                                     <li><a class="dropdown-item" href="kategori.php?string=sourcecode">Source Code</a></li>
@@ -77,6 +83,78 @@ session_start();
                                 <a class="nav-link" href="panduan.html">Panduan</a>
                             </li>
 
+
+                            <!-- open menu transaksi pending -->
+                            <?php 
+
+                            if($_SESSION['username']){
+                                ?>
+                                <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarLightDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">Transaksi</a>
+                                <ul class="dropdown-menu dropdown-menu-light" aria-labelledby="navbarLightDropdownMenuLink">
+                                    <?php 
+                                    $cektransaksi = mysqli_query($koneksi, "SELECT * FROM transaksi WHERE id_pembeli = '$iduser'");
+
+                                    if(mysqli_num_rows($cektransaksi) > 0){
+                                        while($datatransaksi = mysqli_fetch_array($cektransaksi)){
+                                            $idtransaksi = $datatransaksi['id_transaksi'];
+                                            $namaproduk = $datatransaksi['nama_produk'];
+                                            $hargaproduk = $datatransaksi['harga_produk'];
+                                            $statustransaksi = $datatransaksi['status_transaksi'];
+
+                                            ?>
+                                            <li>
+                                                <a class="dropdown-item" href="kategori.php?string=ebook">
+                                                    <div style="display: flex; flex-direction: column; justify-content: flex-start;">
+                                                        <p>Id :  <span style="color: grey; font-style: italic; font-size: 11px;"><?php echo $idtransaksi; ?></span></p>
+                                                        <p style="color: black; font-weight: bolder; font-size: 15px;"><?php echo $namaproduk; ?></p>
+                                                        <p style="color: black; font-size: 15px;"><?php echo $hargaproduk; ?></p>
+                                                        
+                                                            <?php 
+                                                            if(statustransaksi == "approve"){
+                                                                ?>
+                                                                    <p style="color: green; font-weight: bolder; font-size: 15px;"><?php echo $statustransaksi; ?></p>
+                                                                <?php  
+                                                            }else if($statustransaksi == "reject"){
+                                                                ?>
+                                                                    <p style="color: red; font-weight: bolder; font-size: 15px;"><?php echo $statustransaksi; ?></p>
+                                                                <?php  
+                                                            }
+
+                                                             ?>     
+                                                                                                         
+                                                    </div>
+                                                </a>
+                                            </li>
+
+                                            <?php  
+                                            }
+
+
+                                    }else{
+                                        ?>
+                                        <p  style="color: grey; font-style: italic; font-size: 12px; text-align: center;">Belum ada transaksi</p>
+                                        <?php 
+                                    }
+                        
+                                    ?>
+
+                                    
+                                </ul>
+                            </li>
+
+                            <?php  
+                            }
+                             ?>
+                             <!-- close menu transaksi pending -->
+                            
+                            
+                            
+
+
+
+
+                            <!-- open menu upload produk -->
                             <?php 
 
                             if($_SESSION['username']){
@@ -90,11 +168,18 @@ session_start();
                             }else{
 
                             }
-                             ?>
+                            ?>
+                            <!-- close menu upload produk -->
+
+
+
+
 
 
                            
                         </ul>
+
+
 
                         <!-- open akun -->
                              <?php 
@@ -268,12 +353,13 @@ session_start();
 
 
                                 <!-- open list produk -->
+
                                 <div class="tab-pane fade show active" id="design-tab-pane" role="tabpanel" aria-labelledby="design-tab" tabindex="0">
                                     <div class="row" style="display: flex; justify-content: center;">
 
                                         <?php 
 
-                                        $cekproduk = mysqli_query($koneksi, "SELECT * FROM produk");
+                                        $cekproduk = mysqli_query($koneksi, "SELECT * FROM produk WHERE status = 'approve'");
 
                                         function formatRupiah($angka) {
                                             return 'Rp ' . number_format($angka, 2, ',', '.');
@@ -414,7 +500,7 @@ session_start();
                                     </h2>
 
                                     <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-                                        <div class="accordion-body" style="color: black;">
+                                        <div class="accordion-body" style="color: black; text-align: justify;">
                                            SVELTIER merupakan platform jual beli produk digital seperti source code, E-book, dll. Sveltier mulai beroperasi pada bulan desember 2024. Produk digital merupakan buah pikiran dan dapat dijadikan sumber pendapatan bagi kreatornya. Sveltier hadir untuk membantu para kreator dalam melakukan transaksi jual beli produk yang mereka ciptakan.
                                         </div>
                                     </div>
