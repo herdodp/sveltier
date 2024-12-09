@@ -1,5 +1,5 @@
 <?php 
-include "conn123.php";
+include "../conn123.php";
 session_start();
 
 if(!isset($_SESSION['username'])){
@@ -11,14 +11,8 @@ if(!isset($_SESSION['username'])){
     <?php  
 }
 
-$usernamesession = $_SESSION['username'];
-$takedatauser = mysqli_query($koneksi, "SELECT * FROM account WHERE username = '$usernamesession'");
-while($datauser = mysqli_fetch_array($takedatauser)){
-    $iduser = $datauser['id_user'];
-}
-
-
 $getidproduk = $_GET['idproduk'];
+
 
 //sanitize 1
 $getidproduk1 = mysqli_real_escape_string($koneksi, $getidproduk);
@@ -38,15 +32,8 @@ if(mysqli_num_rows($dataProduk) > 0){
         $kategoriproduk = $dataProduct['kategori_produk'];
         $hargaproduk = $dataProduct['harga_produk'];
         $pemilikproduk = $dataProduct['pemilik_produk'];
-        $produkdilihat = $dataProduct['produk_dilihat'];
         $tanggalupload = $dataProduct['tanggal_upload'];
     }
-
-    //addviews
-    $views = $produkdilihat + 1;
-    $addviews = "UPDATE produk set produk_dilihat = '$views' WHERE id_produk = '$idproduk'";
-    $connaddviews = mysqli_query($koneksi, $addviews);
-
 
 }else{
     ?>
@@ -80,7 +67,7 @@ if(mysqli_num_rows($dataProduk) > 0){
 
         <!-- CSS FILES -->        
 
-        <link rel="stylesheet" type="text/css" href="styledetail.css">
+        <link rel="stylesheet" type="text/css" href="../styledetail.css">
 
 
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -89,11 +76,11 @@ if(mysqli_num_rows($dataProduk) > 0){
 
         <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&family=Open+Sans&display=swap" rel="stylesheet">
                         
-        <link href="css/bootstrap.min.css" rel="stylesheet">
+        <link href="../css/bootstrap.min.css" rel="stylesheet">
 
-        <link href="css/bootstrap-icons.css" rel="stylesheet">
+        <link href="../css/bootstrap-icons.css" rel="stylesheet">
 
-        <link href="css/templatemo-topic-listing.css" rel="stylesheet"> 
+        <link href="../css/templatemo-topic-listing.css" rel="stylesheet"> 
 
     </head>
 <body>
@@ -104,7 +91,7 @@ if(mysqli_num_rows($dataProduk) > 0){
 
 
         <div style="display: flex; margin-top: 10px; margin-left: 20px;">
-            <h1><a href="index.php" style="font-style: italic; font-weight: bolder; font-size: 20px; color: black;">Kembali ke beranda</a></h1>
+            <h1><a href="uploadproduk.php" style="font-style: italic; font-weight: bolder; font-size: 20px; color: black;">Kembali ke dashboard</a></h1>
         </div>
 
     
@@ -142,20 +129,33 @@ if(mysqli_num_rows($dataProduk) > 0){
                     </p>
                     <?php 
 
-                    $cekstatustransaksi = mysqli_query($koneksi, "SELECT * FROM transaksi WHERE id_pembeli = '$iduser' and status_transaksi IN ('pending', 'process')");
+                    $cekstatustransaksi = mysqli_query($koneksi, "SELECT * FROM transaksi WHERE id_pembeli = '$iduser' and status_transaksi = 'pending'");
                     if(mysqli_num_rows($cekstatustransaksi) > 0){
                         ?>
                         <div class="product-actions">
                             <button class="buy-button" disabled style="background-color: grey;  color: white; pointer-events: none;">Beli Sekarang</button>
                             <p style="color: grey; font-style: italic; font-size: 13px;"><span style="color: red; font-weight: bolder;">Note </span>: Anda masih memiliki transaksi yang belum diselesaikan</p>
-                            <!--<button class="add-to-cart-button">Add to Cart</button>-->
                         </div>
                         <?php  
                     }else{
+                    	$confirmapprove = "confirmprocess.php?string=approve&idproduk=$idproduk";
+                    	$confirmreject = "confirmprocess.php?string=reject&idproduk=$idproduk";
+
                         ?>
+                       
+                        <script type="text/javascript">
+                        	function approved(){
+                        		window.location.href = "<?php echo $confirmapprove; ?>";
+                        	}
+
+                        	function rejected(){
+                        		window.location.href = "<?php echo $confirmreject; ?>"
+                        	}
+                        </script>
+
                         <div class="product-actions">
-                            <button class="buy-button" onclick="window.location.href='checkout.php?idproduk=<?php echo $idproduk; ?>'">Beli Sekarang</button>
-                            <!--<button class="add-to-cart-button">Add to Cart</button>-->
+                            <button class="buy-button" onclick="approved()" style="color: white; background-color: green; padding: 10px; border-radius: 10px;  border: none;">Approve</button>
+                            <button class="buy-button" onclick="rejected()" style="color: white; background-color: red; padding: 10px; border-radius: 10px;  border: none;">Reject</button>
                         </div>
                         <?php 
                     }

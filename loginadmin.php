@@ -32,8 +32,7 @@ if(isset($_POST["submit"])){
             $iduser = $dataUser['id_user'];
                 $usernameDB = $dataUser['username'];
                 $passwordDB = $dataUser['password'];
-                $roleDB = $dataUser['role'];
-                $jumlahlogin = $dataUser['jumlah_login']; 
+            $jumlahlogin = $dataUser['jumlah_login']; 
             }
 
 
@@ -55,13 +54,7 @@ if(isset($_POST["submit"])){
 
 
                         $_SESSION['username'] = $usernameDB;
-
-                        if($roleDB == 'admin'){   
-                            header("location: dashboard/dashadmin.php");
-                        }else if($roleDB == 'common'){
-                            header("location: index.php");    
-                        }
-                        
+                        header("location:../index.php");
                         session_start();
 
                     }else{
@@ -74,9 +67,6 @@ if(isset($_POST["submit"])){
                         </script>
                         <?php  
                     }
-
-
-
                 }else{
                     ?>
                     <script type="text/javascript">
@@ -92,7 +82,7 @@ if(isset($_POST["submit"])){
                 ?>
                 <script type="text/javascript">
                     alert("username tidak ditemukan");
-                    setTimeout(function(){
+                    settimeout(function(){
                         window.location.href =  "login.php";
                     },1000);
                 </script>
@@ -104,7 +94,7 @@ if(isset($_POST["submit"])){
             ?>
             <script type="text/javascript">
                 alert("kolom password tidak boleh kosong");
-                setTimeout(function(){
+                settimeout(function(){
                     window.location.href =  "login.php";
                 },1000);
             </script>
@@ -116,7 +106,7 @@ if(isset($_POST["submit"])){
         <script type="text/javascript">
             alert("Kolom username tidak boleh kosong");
 
-            setTimeout(function(){
+            settimeout(function(){
                 window.location.href =  "login.php";
             },1000);
         </script>

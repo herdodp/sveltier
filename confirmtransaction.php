@@ -1,5 +1,5 @@
 <?php 
-include "conn123.php";
+include "../conn123.php";
 session_start();
 
 if(!isset($_SESSION['username'])){
@@ -11,48 +11,38 @@ if(!isset($_SESSION['username'])){
     <?php  
 }
 
-$usernamesession = $_SESSION['username'];
-$takedatauser = mysqli_query($koneksi, "SELECT * FROM account WHERE username = '$usernamesession'");
-while($datauser = mysqli_fetch_array($takedatauser)){
-    $iduser = $datauser['id_user'];
-}
+$getidtransaksi = $_GET['idtransaksi'];
 
-
-$getidproduk = $_GET['idproduk'];
 
 //sanitize 1
-$getidproduk1 = mysqli_real_escape_string($koneksi, $getidproduk);
+$getidtransaksi1 = mysqli_real_escape_string($koneksi, $getidtransaksi);
 
 //sanitize 2
-$getidproduk2 = strip_tags($getidproduk1);
+$getidtransaksi2 = strip_tags($getidtransaksi1);
 
 
-$dataProduk =  mysqli_query($koneksi, "SELECT * FROM produk WHERE id_produk ='$getidproduk2'");
-if(mysqli_num_rows($dataProduk) > 0){
-    while($dataProduct = mysqli_fetch_array($dataProduk)){
-        $idproduk = $dataProduct['id_produk'];
-        $namaproduk = $dataProduct['nama_produk'];
-        $fotoproduk = $dataProduct['foto_produk'];
-        $deskripsiproduk = $dataProduct['deskripsi_produk'];
-        $fileproduk = $dataProduct['file_produk'];
-        $kategoriproduk = $dataProduct['kategori_produk'];
-        $hargaproduk = $dataProduct['harga_produk'];
-        $pemilikproduk = $dataProduct['pemilik_produk'];
-        $produkdilihat = $dataProduct['produk_dilihat'];
-        $tanggalupload = $dataProduct['tanggal_upload'];
+$datatransaksi =  mysqli_query($koneksi, "SELECT * FROM transaksi WHERE id_transaksi ='$getidtransaksi2'");
+if(mysqli_num_rows($datatransaksi) > 0){
+    while($takedata = mysqli_fetch_array($datatransaksi)){
+        $idtransaksi = $takedata['id_transaksi'];
+        $idpemilik = $takedata['id_pemilik'];
+        $idpembeli = $takedata['id_pembeli'];
+        $idproduk = $takedata['id_produk'];
+        $namaproduk = $takedata['nama_produk'];
+        $hargaproduk = $takedata['harga_produk'];
+        $fotobukti = $takedata['foto_bukti'];
+        $totalpembayaran = $takedata['total_pembayaran'];
+        $statustransaksi = $takedata['status_transaksi'];
+        $timetransaksi = $takedata['time_transaksi'];
     }
-
-    //addviews
-    $views = $produkdilihat + 1;
-    $addviews = "UPDATE produk set produk_dilihat = '$views' WHERE id_produk = '$idproduk'";
-    $connaddviews = mysqli_query($koneksi, $addviews);
-
 
 }else{
     ?>
     <script type="text/javascript">
-        alert("tidak ada produk yang ditemukan");
-        window.location.href = "index.php";
+        alert("tidak ada transaksi yang ditemukan. Silahkan hubungi admin");
+        setTimeout(function(){
+            window.location.href = "index.php";
+        }, 1000);
     </script>
     <?php 
 }
@@ -64,6 +54,8 @@ if(mysqli_num_rows($dataProduk) > 0){
     }
 
     $formatharga = formatRupiah($hargaproduk);
+    $formattotal = formatRupiah($totalpembayaran);
+
 
 
  ?>
@@ -80,7 +72,7 @@ if(mysqli_num_rows($dataProduk) > 0){
 
         <!-- CSS FILES -->        
 
-        <link rel="stylesheet" type="text/css" href="styledetail.css">
+        <link rel="stylesheet" type="text/css" href="../styledetail.css">
 
 
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -89,11 +81,11 @@ if(mysqli_num_rows($dataProduk) > 0){
 
         <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&family=Open+Sans&display=swap" rel="stylesheet">
                         
-        <link href="css/bootstrap.min.css" rel="stylesheet">
+        <link href="../css/bootstrap.min.css" rel="stylesheet">
 
-        <link href="css/bootstrap-icons.css" rel="stylesheet">
+        <link href="../css/bootstrap-icons.css" rel="stylesheet">
 
-        <link href="css/templatemo-topic-listing.css" rel="stylesheet"> 
+        <link href="../css/templatemo-topic-listing.css" rel="stylesheet"> 
 
     </head>
 <body>
@@ -104,7 +96,7 @@ if(mysqli_num_rows($dataProduk) > 0){
 
 
         <div style="display: flex; margin-top: 10px; margin-left: 20px;">
-            <h1><a href="index.php" style="font-style: italic; font-weight: bolder; font-size: 20px; color: black;">Kembali ke beranda</a></h1>
+            <h1><a href="transaksi.php" style="font-style: italic; font-weight: bolder; font-size: 20px; color: black;">Kembali ke dashboard</a></h1>
         </div>
 
     
@@ -116,9 +108,9 @@ if(mysqli_num_rows($dataProduk) > 0){
                 <div class="product-gallery">
                     <?php 
 
-                    if(empty($fotoproduk)){
+                    if(empty($fotobukti)){
                         ?>
-                            <img src="<?php echo $fotoproduk; ?>?height=500&width=500" alt="Smartphone Model X" class="main-image">
+                            <img src="<?php echo $fotobukti; ?>?height=500&width=500" alt="Smartphone Model X" class="main-image">
                         <?php  
                     }else{
                         ?>
@@ -137,25 +129,40 @@ if(mysqli_num_rows($dataProduk) > 0){
                          <?php echo $formatharga; ?>
                     </div>
 
-                    <p class="product-description">
-                        <?php echo $deskripsiproduk; ?>
-                    </p>
+                    <div class="product-price">
+                         <?php echo $formattotal; ?>
+                    </div>
+
+                 
                     <?php 
 
-                    $cekstatustransaksi = mysqli_query($koneksi, "SELECT * FROM transaksi WHERE id_pembeli = '$iduser' and status_transaksi IN ('pending', 'process')");
+                    $cekstatustransaksi = mysqli_query($koneksi, "SELECT * FROM transaksi WHERE id_pembeli = '$iduser' and status_transaksi = 'pending'");
                     if(mysqli_num_rows($cekstatustransaksi) > 0){
                         ?>
                         <div class="product-actions">
                             <button class="buy-button" disabled style="background-color: grey;  color: white; pointer-events: none;">Beli Sekarang</button>
                             <p style="color: grey; font-style: italic; font-size: 13px;"><span style="color: red; font-weight: bolder;">Note </span>: Anda masih memiliki transaksi yang belum diselesaikan</p>
-                            <!--<button class="add-to-cart-button">Add to Cart</button>-->
                         </div>
                         <?php  
                     }else{
+                    	$confirmapprove = "confirmprocess.php?string=approve&idproduk=$idproduk";
+                    	$confirmreject = "confirmprocess.php?string=reject&idproduk=$idproduk";
+
                         ?>
+                       
+                        <script type="text/javascript">
+                        	function approved(){
+                        		window.location.href = "<?php echo $confirmapprove; ?>";
+                        	}
+
+                        	function rejected(){
+                        		window.location.href = "<?php echo $confirmreject; ?>"
+                        	}
+                        </script>
+
                         <div class="product-actions">
-                            <button class="buy-button" onclick="window.location.href='checkout.php?idproduk=<?php echo $idproduk; ?>'">Beli Sekarang</button>
-                            <!--<button class="add-to-cart-button">Add to Cart</button>-->
+                            <button class="buy-button" onclick="approved()" style="color: white; background-color: green; padding: 10px; border-radius: 10px;  border: none;">Approve</button>
+                            <button class="buy-button" onclick="rejected()" style="color: white; background-color: red; padding: 10px; border-radius: 10px;  border: none;">Reject</button>
                         </div>
                         <?php 
                     }
@@ -228,21 +235,6 @@ if(mysqli_num_rows($dataProduk) > 0){
 
 
                     <div class="col-lg-3 col-md-4 col-12 mt-4 mt-lg-0 ms-auto">
-
-                        <!--
-                        <div class="dropdown">
-                            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            English</button>
-
-                            <ul class="dropdown-menu">
-                                <li><button class="dropdown-item" type="button">Thai</button></li>
-
-                                <li><button class="dropdown-item" type="button">Myanmar</button></li>
-
-                                <li><button class="dropdown-item" type="button">Arabic</button></li>
-                            </ul>
-                        </div>
-                        -->
 
                         <p class="copyright-text mt-lg-5 mt-4">© 2024 SVELTIER. All right reserved </p>
                         

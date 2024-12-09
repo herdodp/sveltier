@@ -62,7 +62,7 @@ if(isset($_POST['submit'])){
                     //password checking
                     if($ulangpassword == $password){
                         //insert data
-                        $insertData = "INSERT INTO account set id_user = '$iduser', namalengkap = '$namalengkap2', username = '$username2', password = '$password2'";
+                        $insertData = "INSERT INTO account set id_user = '$iduser', namalengkap = '$namalengkap2', username = '$username2', password = '$password2', role = 'common'";
                         $connInsertData = mysqli_query($koneksi, $insertData);
 
                         //checking progress

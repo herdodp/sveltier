@@ -2,7 +2,7 @@
 include "conn123.php";
 session_start();
 
-$usernamesession = $_SESSION['username'];
+$usernamesession = $_SESSION['username']; 
 
 if (isset($_POST["submit"])) {
 
@@ -116,15 +116,17 @@ if (isset($_POST["submit"])) {
 
                $idprodukrandom = generateRandomString();
                //close random id produk
+               $statusawal = 'pending';
+
 
 
     // Proses unggah file
     if (move_uploaded_file($_FILES["fileProduk"]["tmp_name"], $targetFile) && move_uploaded_file($_FILES["fileGambarProduk"]["tmp_name"], $targetFileGambar)) {
 
         // Masukkan data ke database
-        $stmt = $koneksi->prepare("INSERT INTO produk (id_produk, nama_produk, foto_produk, deskripsi_produk, file_produk, kategori_produk, harga_produk, pemilik_produk) 
+        $stmt = $koneksi->prepare("INSERT INTO produk (id_produk, nama_produk, foto_produk, deskripsi_produk, file_produk, kategori_produk, harga_produk, pemilik_produk, status) 
                                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
-        $stmt->bind_param("ssssssiss", $idprodukrandom, $namaproduk, $targetFileGambar, $deskripsiproduk, $targetFile, $kategoriproduk, $hargaproduk, $namapemilik, 'pending');
+        $stmt->bind_param("ssssssiss", $idprodukrandom, $namaproduk, $targetFileGambar, $deskripsiproduk, $targetFile, $kategoriproduk, $hargaproduk, $namapemilik, $statusawal);
 
         if ($stmt->execute()) {
             echo "<script>alert('Produk berhasil diunggah.'); window.location.href = 'index.php';</script>";
@@ -140,7 +142,7 @@ if (isset($_POST["submit"])) {
 
 
 
-    
+
 
 
 

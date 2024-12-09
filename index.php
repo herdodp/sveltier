@@ -93,7 +93,7 @@ while($datauser = mysqli_fetch_array($conncekdatauser)){
                                 <a class="nav-link dropdown-toggle" href="#" id="navbarLightDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">Transaksi</a>
                                 <ul class="dropdown-menu dropdown-menu-light" aria-labelledby="navbarLightDropdownMenuLink">
                                     <?php 
-                                    $cektransaksi = mysqli_query($koneksi, "SELECT * FROM transaksi WHERE id_pembeli = '$iduser'");
+                                    $cektransaksi = mysqli_query($koneksi, "SELECT * FROM transaksi WHERE id_pembeli = '$iduser' and status_transaksi IN ('pending', 'process')");
 
                                     if(mysqli_num_rows($cektransaksi) > 0){
                                         while($datatransaksi = mysqli_fetch_array($cektransaksi)){
@@ -104,26 +104,34 @@ while($datauser = mysqli_fetch_array($conncekdatauser)){
 
                                             ?>
                                             <li>
-                                                <a class="dropdown-item" href="kategori.php?string=ebook">
+                                                <a class="dropdown-item" href="payment.php?idtransaksi=<?php echo $idtransaksi; ?>" style="line-height: 1px;">
                                                     <div style="display: flex; flex-direction: column; justify-content: flex-start;">
-                                                        <p>Id :  <span style="color: grey; font-style: italic; font-size: 11px;"><?php echo $idtransaksi; ?></span></p>
-                                                        <p style="color: black; font-weight: bolder; font-size: 15px;"><?php echo $namaproduk; ?></p>
-                                                        <p style="color: black; font-size: 15px;"><?php echo $hargaproduk; ?></p>
-                                                        
+
+                                                        <div style="display: flex; flex-direction: column;">
+                                                            <p><span style="color: grey; font-style: italic; font-size: 11px; margin-right: 10px;">Id :  <?php echo $idtransaksi; ?></span></p>
+                                                            <p style="color: black; font-weight: bolder; font-size: 11px;"><?php echo $namaproduk; ?></p>
+                                                        </div>
+
+                                                        <div style="display: flex; flex-direction: row; align-items: center;">
+                                                            <p style="color: grey; font-size: 11px; margin-right: 10px;">Rp <?php echo $hargaproduk; ?></p>
                                                             <?php 
-                                                            if(statustransaksi == "approve"){
+                                                            if($statustransaksi == "pending"){
                                                                 ?>
-                                                                    <p style="color: green; font-weight: bolder; font-size: 15px;"><?php echo $statustransaksi; ?></p>
+                                                                    <p style="color: red; font-size: 11px;"><?php echo $statustransaksi; ?></p>
                                                                 <?php  
-                                                            }else if($statustransaksi == "reject"){
+                                                            }else if($statustransaksi == "process"){
                                                                 ?>
-                                                                    <p style="color: red; font-weight: bolder; font-size: 15px;"><?php echo $statustransaksi; ?></p>
+                                                                    <p style="color: green; font-size: 11px;"><?php echo $statustransaksi; ?></p>
                                                                 <?php  
                                                             }
+                                                             ?>
+                                                            
+                                                            
+                                                            
+                                                        </div>
 
-                                                             ?>     
-                                                                                                         
                                                     </div>
+                                                    <hr style="background-color: black; height: 2px; width: 100%;margin-top: -10px;">
                                                 </a>
                                             </li>
 
