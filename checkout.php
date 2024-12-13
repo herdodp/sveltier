@@ -134,45 +134,8 @@ if(isset($_POST['submit'])){
 
     </head>
 
+    <body style="background-color: white;"> 
 
-
-
-    <!-- =============================================================== open navbar ====================================================-->
-            <nav class="navbar navbar-expand-lg">
-                <div class="container">
-                    <a class="navbar-brand" href="index.php">
-                        <!--<i class="bi-back"></i>-->
-                        <span style="color: white; font-weight: bolder;">SVELTIER</span>
-                    </a>
-
-
-    
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                    <!-- close mode -->
-                    
-                    <script type="text/javascript">
-                        function batal(){
-                            var confirmbatal = confirm("Batalkan transaksi ?");
-                            if(confirmbatal == true){
-                                window.location.href = "index.php";
-                            }
-                        }
-                    </script>
-
-                    <div class="collapse navbar-collapse" id="navbarNav">
-                        <ul class="navbar-nav ms-lg-5 me-lg-auto">
-                            <li class="nav-item">
-                                <a class="nav-link click-scroll" href="index.php">kembali ke Beranda</a>
-                            </li>
-    
-                        </ul>
-
-                    </div>
-                </div>
-            </nav>
-            <!-- =========================================================== close navbar ====================================================== -->
 
 
 
@@ -183,15 +146,21 @@ if(isset($_POST['submit'])){
 
     <!-- =============================================================== open main ===================================================== -->
 
-    <main class="container">
-        <h1>Metode Pembayaran</h1>
+    <main class="container" style="margin-top: 100px;">
+        <h1 style="text-align: center;">Metode Pembayaran</h1>
         <div class="payment-methods">
 
             <div class="payment-method">
                 <input type="radio" id="e-wallet" name="payment" value="e-wallet">
                 <label for="e-wallet">
-                    <img src="images/dana.jpg?height=40&width=60" alt="DANA">
-                    <span>DANA</span>
+                    <div style="display: flex; flex-direction: row; align-items: center;">
+                        <img src="images/dana.jpg" alt="DANA" style="margin-right: 10px; width: 200px; height: 200px;">
+                        <img src="images/qrisdana2.jpeg" alt="qris dana" style="height: 200px; width: 200px;">
+                    </div>
+                    <div style="display: flex; flex-direction: column;">
+                        <p style="color: black;">Hanya gunakan Qris dana diatas untuk pembayaran</p>
+                        <p style="color: black;"><span style="color: red; font-weight: bolder;">Note</span>: Kami tidak bertanggung jawab jika terjadi tindakan penipuan atau lain-lainnya akibat dari ketidakpatuhan pengguna</p>
+                    </div>
                 </label>
             </div>
 

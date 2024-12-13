@@ -207,7 +207,7 @@ while($datauser = mysqli_fetch_array($conncekdatauser)){
 
                                 <li class="nav-item dropdown" style="list-style-type: none;">
                                     <div style="display: flex; flex-direction: row; align-items: center;">
-                                    <a class="nav-link" href="profile.php?username=<?php echo $_SESSION['username']; ?>" id="navbarLightDropdownMenuLink" aria-expanded="false" style="color: white; font-weight: bolder; margin-right: 10px"><?php echo $_SESSION['username']; ?></a>
+                                    <a class="nav-link" href="profil.php?iduser=<?php echo $iduser; ?>" id="navbarLightDropdownMenuLink" aria-expanded="false" style="color: white; font-weight: bolder; margin-right: 10px"><?php echo $_SESSION['username']; ?></a>
                                     <a class="nav-link" href="logout.php" id="navbarLightDropdownMenuLink" aria-expanded="false" style="color: white; font-weight: bolder; background-color: #FF0000; padding: 10px; border: none; outline: none; outline-color: none; border-radius: 10px;">LOGOUT</a>
                                     </div>
                                 </li>
