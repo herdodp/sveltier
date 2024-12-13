@@ -136,7 +136,7 @@ if(mysqli_num_rows($datatransaksi) > 0){
                  
                     <?php 
 
-                    $cekstatustransaksi = mysqli_query($koneksi, "SELECT * FROM transaksi WHERE id_pembeli = '$iduser' and status_transaksi = 'pending'");
+                    $cekstatustransaksi = mysqli_query($koneksi, "SELECT * FROM transaksi WHERE id_transaksi = '$idtransaksi'");
                     if(mysqli_num_rows($cekstatustransaksi) > 0){
                         ?>
                         <div class="product-actions">

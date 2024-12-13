@@ -1,61 +1,31 @@
 <?php 
-
 include "../conn123.php";
 session_start();
 
 if(!isset($_SESSION['username'])){
-	?>
-	<script type="text/javascript">
-		alert('Anda belum login');
-		setTimeout(function(){
-			window.location.href='../login.php';
-		}, 1000);
-	</script>
-	<?php  
+    header("location:../login.php");
+    exit;
 }
 
+//ambil data upload produk yang pending
+$takeproduk = mysqli_query($koneksi, "SELECT * FROM produk");
+
+//count transaction
+$jumlahtransaksi = mysqli_query($koneksi, "SELECT COUNT(*) AS totalcountra FROM transaksi");
+$rowcounttra = mysqli_fetch_assoc($jumlahtransaksi);
+$counttra = $rowcounttra['totalcountra'];
 
 
-
- 				// open random id history
-               function generateRandomString($length = 10) {
-                   $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-                   $randomString = '';
-
-                   for ($i = 0; $i < $length; $i++) {
-                       $randomString .= $characters[rand(0, strlen($characters) - 1)];
-                   }
-
-                   return $randomString;
-               }
-
-               $idprodukrandom = generateRandomString();
-               //close random id produk
-               $statusawal = 'pending';
-               //close random id history
-
-
-
-
-//get string
-$getstring = $_GET['transaction'];
-
-//sanitize 1
-$getstring1 = mysqli_real_escape_string($koneksi, $getstring);
-
-//sanitize 2
-$getstring2 = strip_tags($getstring1);
-
-//cek history
-$cekhistory = mysqli_query($koneksi, "SELECT * FROM history WHERE status = 'done'");
-
-
+//count upload product
+$jumlahprodukpending = mysqli_query($koneksi, "SELECT COUNT(*) AS totalcountup FROM produk WHERE status = 'pending'");
+$rowcountup  = mysqli_fetch_assoc($jumlahprodukpending);
+$countrowup = $rowcountup['totalcountup'];
 
 
 
 
  ?>
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -97,7 +67,7 @@ $cekhistory = mysqli_query($koneksi, "SELECT * FROM history WHERE status = 'done
         <!-- open table data -->
         <main class="main-content">
             <header class="main-header">
-                <h1>History</h1>
+                <h1>All Product</h1>
             </header>
             <div class="table-container">
 
@@ -108,12 +78,15 @@ $cekhistory = mysqli_query($koneksi, "SELECT * FROM history WHERE status = 'done
                     <thead>
                         <tr>
                             <th>ID Produk</th>
-                            <th>ID Transaction</th>
-                            <th>ID Pemilik</th>
-                            <th>ID Pembeli</th>
-                            <th>ID Produk</th>
+                            <th>Nama Produk</th>
+                            <th>Foto</th>
+                            <th>File</th>
+                            <th>Kategori</th>
+                            <th>Harga</th>
+                            <th>Pemilik</th>
+                            <th>Views</th>
                             <th>Status</th>
-                            <th>Waktu Selesai</th>
+                            <th>Tanggal Upload</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -122,25 +95,31 @@ $cekhistory = mysqli_query($koneksi, "SELECT * FROM history WHERE status = 'done
                         <?php 
 
 
-                        if(mysqli_num_rows($cekhistory) > 0){
-                            while($datahistory = mysqli_fetch_array($cekhistory)){
-                                $idhistory = $datahistory['id_history'];
-                                $idtransaction = $datahistory['id_transaction'];
-                                $idpemilik = $datahistory['id_pemilik'];
-                                $idpembeli = $datahistory['id_pembeli'];
-                                $idproduk = $datahistory['id_produk'];
-                                $status = $datahistory['status'];
-                                $timecomplete = $datahistory['time_complete'];
+                        if(mysqli_num_rows($takeproduk) > 0){
+                            while($datauser = mysqli_fetch_array($takeproduk)){
+                                $idproduk = $datauser['id_produk'];
+                                $namaproduk = $datauser['nama_produk'];
+                                $fotoproduk = $datauser['foto_produk'];
+                                $fileproduk = $datauser['file_produk'];
+                                $kategoriproduk = $datauser['kategori_produk'];
+                                $hargaproduk = $datauser['harga_produk'];
+                                $pemilikproduk = $datauser['pemilik_produk'];
+                                $produkdilihat = $datauser['produk_dilihat'];
+                                $status = $datauser['status'];
+                                $tanggalupload = $datauser['tanggal_upload'];
                             ?>
 
                         <tr>
-                            <td><?php echo $idhistory; ?></td>
-                            <td><?php echo $idtransaction; ?></td>
-                            <td><?php echo $idpemilik; ?></td>
-                            <td><?php echo $idpembeli; ?></td>
                             <td><?php echo $idproduk; ?></td>
+                            <td><?php echo $namaproduk; ?></td>
+                            <td><?php echo $fotoproduk; ?></td>
+                            <td><?php echo $fileproduk; ?></td>
+                            <td><?php echo $kategoriproduk; ?></td>
+                            <td>Rp <?php echo $hargaproduk; ?></td>
+                            <td><?php echo $pemilikproduk; ?></td>
+                            <td><?php echo $produkdilihat; ?></td>
                             <td><?php echo $status; ?></td>
-                            <td><?php echo $timecomplete; ?></td>
+                            <td><?php echo $tanggalupload; ?></td>
                             <td>
                                 <button type="button" onclick="window.location.href='editprofile.php?iduser=<?php echo $iduser; ?>'" style="color: white; font-weight: bolder; background-color: blue; border-radius: 10px; border: none; margin-left: 10px;padding: 10px;">Edit</button>
                             </td>
@@ -151,7 +130,7 @@ $cekhistory = mysqli_query($koneksi, "SELECT * FROM history WHERE status = 'done
 
                         }else{
                             ?>
-                                <h1 style="color: grey; font-weight: bolder; text-align: center; margin-top: 50px; margin-bottom: 50px; font-style: italic;">Belum ada transaksi yang selesai</h1>
+                                <h1 style="color: grey; font-weight: bolder; text-align: center; margin-top: 50px; margin-bottom: 50px; font-style: italic;">Tidak ada user yang terdaftar</h1>
                             <?php 
                         }
                          ?>

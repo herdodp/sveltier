@@ -1,6 +1,43 @@
 <?php 
-include "conn123.php";
+include "../conn123.php";
 session_start();
+
+
+if(!isset($_SESSION['username'])){
+    header("location:../login.php");
+    exit;
+}
+
+
+//count transaction
+$jumlahtransaksi = mysqli_query($koneksi, "SELECT COUNT(*) AS totalcountra FROM transaksi");
+$rowcounttra = mysqli_fetch_assoc($jumlahtransaksi);
+$counttra = $rowcounttra['totalcountra'];
+
+
+//count upload product
+$jumlahprodukpending = mysqli_query($koneksi, "SELECT COUNT(*) AS totalcountup FROM produk WHERE status = 'pending'");
+$rowcountup  = mysqli_fetch_assoc($jumlahprodukpending);
+$countrowup = $rowcountup['totalcountup'];
+
+
+//jumlah user
+$jumlahuser = mysqli_query($koneksi, "SELECT COUNT(*) AS total FROM account WHERE role = 'common'");
+$rowuser = mysqli_fetch_assoc($jumlahuser);
+$countrowuser = $rowuser['total'];
+
+//jumlah produk
+$jumlahproduk = mysqli_query($koneksi, "SELECT COUNT(*) AS totalproduk FROM produk");
+$rowproduk = mysqli_fetch_assoc($jumlahproduk);
+$countrowproduk = $rowproduk['totalproduk'];
+
+
+//jumlah transasksi selesai
+$transaksiselesai = mysqli_query($koneksi, "SELECT COUNT(*) AS totaltransaksiselesai FROM history WHERE status = 'done'");
+$rowtransaksiselesai = mysqli_fetch_assoc($transaksiselesai);
+$counttransaksiselesai = $rowtransaksiselesai['totaltransaksiselesai'];
+
+
 
 
  ?>
@@ -28,12 +65,14 @@ session_start();
             </div>
             <nav class="sidebar-nav">
                 <ul>
-                    <li><a href="dashadmin.php" class="active">Beranda</a></li>
-                    <li><a href="uploadproduk.php">Upload Produk</a></li>
-                    <li><a href="transaction.php">Transaksi</a></li>
+                    <li><a href="dashadmin.php"  class="active">Beranda</a></li>
+                    <li><a href="uploadproduk.php">Upload Produk <span style="color: yellow; font-weight: bolder;">( <?php echo $countrowup; ?> )</span></a></li>
+                    <li><a href="transaction.php">Transaksi <span style="color: yellow; font-weight: bolder;">( <?php echo $counttra; ?> )</span></a></li>
                     <li><a href="alluser.php">Daftar Pengguna</a></li>
+                    <li><a href="allproduk.php">Daftar Produk</a></li>
                     <li><a href="history.php">Riwayat Transaksi</a></li>
                     <li><a href="listadmin.php">Daftar Admin</a></li>
+                    <li><a href="laporanpengguna.php">Laporan Pengguna</a></li>
                 </ul>
             </nav>
         </aside>
@@ -44,74 +83,144 @@ session_start();
 
 
 
+
+
+
+
+
+        <!-- open main -->
         <main class="main-content">
+
+
             <header class="main-header">
                 <h1>Beranda</h1>
             </header>
-            <div class="table-container">
 
-                <!-- open data -->
-                <table class="sales-table">
-                    <thead>
-                        <tr>
-                            <th>Order ID</th>
-                            <th>Customer</th>
-                            <th>Product</th>
-                            <th>Date</th>
-                            <th>Amount</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>#1234</td>
-                            <td>John Doe</td>
-                            <td>Product A</td>
-                            <td>2023-05-01</td>
-                            <td>$100.00</td>
-                            <td><span class="status completed">Completed</span></td>
-                        </tr>
-                        <tr>
-                            <td>#1235</td>
-                            <td>Jane Smith</td>
-                            <td>Product B</td>
-                            <td>2023-05-02</td>
-                            <td>$75.50</td>
-                            <td><span class="status pending">Pending</span></td>
-                        </tr>
-                        <tr>
-                            <td>#1236</td>
-                            <td>Bob Johnson</td>
-                            <td>Product C</td>
-                            <td>2023-05-03</td>
-                            <td>$200.00</td>
-                            <td><span class="status completed">Completed</span></td>
-                        </tr>
-                        <tr>
-                            <td>#1237</td>
-                            <td>Alice Brown</td>
-                            <td>Product D</td>
-                            <td>2023-05-04</td>
-                            <td>$50.25</td>
-                            <td><span class="status cancelled">Cancelled</span></td>
-                        </tr>
-                        <tr>
-                            <td>#1238</td>
-                            <td>Charlie Wilson</td>
-                            <td>Product E</td>
-                            <td>2023-05-05</td>
-                            <td>$150.00</td>
-                            <td><span class="status pending">Pending</span></td>
-                        </tr>
-                    </tbody>
-                </table>
-                <!-- close data -->
+
+
+           <!--open data -->
+           <div style="display: flex; flex-direction: column;">
+
+
+            <!-- open row 1-->
+           <div style="display: flex; flex-direction: row; justify-content: center;">   
+
+                <!-- open jumlah member -->
+                <div style="display : flex; flex-direction: column; justify-content: center; text-align: center; align-items: center;">
+                    <a href="https://sveltier.my.id/dashboard/alluser.php" style="border: none; border-radius: 10px; margin: 10px; padding: 10px; height: 150px; width: 200px; text-decoration: none; outline: none; display: flex; justify-content: center; align-items: center; background-color: blue;">
+                        <p style="color: white; font-weight: bolder; font-size: 35px;"><?php echo $countrowuser; ?></p>
+                    </a>
+                    <p style="text-align: center; color: black; font-size: 15px;">Pengguna</p>
+                </div>
+                <!-- close jumlah member -->
+
+                <!-- open jumlah transaksi -->
+                <div style="display : flex; flex-direction: column; justify-content: center; text-align: center; align-items: center;">
+                    <a href="https://sveltier.my.id/dashboard/transaction.php" style="border: none; border-radius: 10px; margin: 10px; padding: 10px; height: 150px; width: 200px; text-decoration: none; outline: none; display: flex; align-items: center;  justify-content: center; background-color: red;">
+                        <p style="color: white; font-weight: bolder; font-size: 35px;"><?php echo $counttra; ?></p>
+                    </a>
+                    <p style="text-align: center; color: black; font-size: 15px;">Transaksi</p>
+                </div>
+                <!-- close jumlah transaksi -->
+
+                <!-- open jumlah produk yang pending -->
+                <div style="display : flex; flex-direction: column; justify-content: center; text-align: center; align-items: center;">
+                    <a href="https://sveltier.my.id/dashboard/uploadproduk.php" style="border: none; border-radius: 10px; margin: 10px; padding: 10px; height: 150px; width: 200px; text-decoration: none; outline: none; align-items: center; justify-content: center; display: flex; background-color: green;">
+                        <p style="color: white; font-weight: bolder; font-size: 35px;"><?php echo $countrowup; ?></p>
+                    </a>
+                    <p style="text-align: center; color: black; font-size: 15px;">Produk Pending</p>
+                </div>
+                <!-- close jumlah produk yang pending -->
+
+                <!-- open jumlah produk -->
+                <div style="display : flex; flex-direction: column; justify-content: center; text-align: center; align-items: center;">
+                    <a href="https://sveltier.my.id/dashboard/allproduk.php" style="border: none; border-radius: 10px; margin: 10px; padding: 10px; height: 150px; width: 200px; text-decoration: none; outline: none; align-items: center; justify-content: center; display: flex; background-color: #808000;">
+                        <p style="color: white; font-weight: bolder; font-size: 35px;"><?php echo $countrowproduk; ?></p>
+                    </a>
+                    <p style="text-align: center; color: black; font-size: 15px;">Jumlah Produk</p>
+                </div>
+                <!-- close jumlah produk -->
+
+           </div>
+           <!-- close row 1 -->
+
+
+
+
+
+
+        <hr style="background-color: black; height: 2px; margin-top: 20px; margin-bottom: 20px;">
+
+
+
+
+
+           <!-- open row 2 -->
+           <div style="display: flex; flex-direction: row; justify-content: center;">   
+
+
+                <!-- open jumlah transaksi selesai -->
+                <div style="display : flex; flex-direction: column; justify-content: center; text-align: center; align-items: center;">
+                    <a href="https://sveltier.my.id/dashboard/history.php?transaction=done" style="border: none; border-radius: 10px; margin: 10px; padding: 10px; height: 150px; width: 200px; text-decoration: none; outline: none; display: flex; justify-content: center; align-items: center; background-color: blue;">
+                        <p style="color: white; font-weight: bolder; font-size: 35px;"><?php echo $counttransaksiselesai; ?></p>
+                    </a>
+                    <p style="text-align: center; color: black; font-size: 15px;">Transaksi Selesai</p>
+                </div>
+                <!-- close jumlah transaksi selesai -->
+
+
+
+                <!-- open jumlah keuntungan -->
+                <div style="display : flex; flex-direction: column; justify-content: center; text-align: center; align-items: center;">
+                    <a href="#" style="border: none; border-radius: 10px; margin: 10px; padding: 10px; height: 150px; width: 200px; text-decoration: none; outline: none; display: flex; justify-content: center; align-items: center; background-color: blue; pointer-events: none;">
+                        <p style="color: white; font-weight: bolder; font-size: 25px;">Rp <?php echo $countrowuser; ?></p>
+                    </a>
+                    <p style="text-align: center; color: black; font-size: 15px;">Keuntungan</p>
+                </div>
+                <!-- close jumlah keuntungan -->
+
+
+                <!-- open laporan pengguna -->
+                <div style="display : flex; flex-direction: column; justify-content: center; text-align: center; align-items: center;">
+                    <a href="https://sveltier.my.id/dashboard/laporanpengguna.php" style="border: none; border-radius: 10px; margin: 10px; padding: 10px; height: 150px; width: 200px; text-decoration: none; outline: none; display: flex; justify-content: center; align-items: center; background-color: red;">
+                        <p style="color: white; font-weight: bolder; font-size: 25px;"><?php echo $countrowuser; ?></p>
+                    </a>
+                    <p style="text-align: center; color: black; font-size: 15px;">Laporan Pengguna</p>
+                </div>
+                <!-- close jumlah laporan pengguna -->
+
+
+
+
+           </div>
+           <!-- close row 2 -->
+           
+
+
+           </div>
+           <!-- close data -->
+
+
+
+
 
 
 
             </div>
         </main>
+        <!-- close main-->
+
+
+
+
+
+
+
     </div>
+
+
+
+
 
 
 
