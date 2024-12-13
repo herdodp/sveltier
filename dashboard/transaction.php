@@ -10,6 +10,22 @@ if(!isset($_SESSION['username'])){
 //ambil data transaksi produk yang pending atau process
 $taketransaksi = mysqli_query($koneksi, "SELECT * FROM transaksi WHERE status_transaksi = 'pending' or status_transaksi = 'process'");
 
+//count transaction
+$jumlahtransaksi = mysqli_query($koneksi, "SELECT COUNT(*) AS totalcountra FROM transaksi");
+$rowcounttra = mysqli_fetch_assoc($jumlahtransaksi);
+$counttra = $rowcounttra['totalcountra'];
+
+
+//count upload product
+$jumlahprodukpending = mysqli_query($koneksi, "SELECT COUNT(*) AS totalcountup FROM produk WHERE status = 'pending'");
+$rowcountup  = mysqli_fetch_assoc($jumlahprodukpending);
+$countrowup = $rowcountup['totalcountup'];
+
+
+//jumlah laporan pengguna
+$reportuser = mysqli_query($koneksi, "SELECT COUNT(*) AS laporanpengguna FROM userreport");
+$rowlaporanpengguna = mysqli_fetch_assoc($reportuser);
+$countrowuserreport = $rowlaporanpengguna['laporanpengguna'];
 
  ?>
 <!DOCTYPE html>
@@ -37,11 +53,13 @@ $taketransaksi = mysqli_query($koneksi, "SELECT * FROM transaksi WHERE status_tr
             <nav class="sidebar-nav">
                 <ul>
                     <li><a href="dashadmin.php">Beranda</a></li>
-                    <li><a href="uploadproduk.php" class="active">Upload Produk</a></li>
-                    <li><a href="transaction.php">Transaksi</a></li>
+                    <li><a href="uploadproduk.php" >Upload Produk <span style="color: yellow; font-weight: bolder;">( <?php echo $countrowup; ?> )</span></a></li>
+                    <li><a href="transaction.php" class="active">Transaksi <span style="color: yellow; font-weight: bolder;">( <?php echo $counttra; ?> )</span></a></li>
                     <li><a href="alluser.php">Daftar Pengguna</a></li>
+                    <li><a href="allproduk.php">Daftar Produk</a></li>
                     <li><a href="history.php">Riwayat Transaksi</a></li>
                     <li><a href="listadmin.php">Daftar Admin</a></li>
+                   <li><a href="laporanpengguna.php">Laporan Pengguna<span style="color: yellow; font-weight: bolder;">( <?php echo $countrowuserreport; ?> )</span></a></li>
                 </ul>
             </nav>
         </aside>
@@ -106,7 +124,11 @@ $taketransaksi = mysqli_query($koneksi, "SELECT * FROM transaksi WHERE status_tr
                             <td><?php echo $idproduk; ?></td>
                             <td><?php echo $namaproduk; ?></td>
                             <td>Rp <?php echo $hargaproduk; ?></td>
-                            <td><?php echo $fotobukti; ?></td>
+                            <td>
+                                <a href="image.php?string=<?php echo $fotobukti; ?>" style="text-decoration: none; outline: none; outline-color: none; color: blue;">
+                                    <?php echo $fotobukti; ?>
+                                </a>
+                            </td>
                             <td><?php echo $totalpembayaran; ?></td>
                             <?php 
                             if($statustransaksi == "pending"){

@@ -6,10 +6,13 @@ if(!isset($_SESSION['username'])){
     ?>
     <script type="text/javascript">
         alert("anda belum login");
-        window.location.href = "login.php";
+        window.location.href = "../login.php";
     </script>
     <?php  
 }
+
+$usernamesession = $_SESSION['username'];
+
 
 $getidtransaksi = $_GET['idtransaksi'];
 
@@ -96,7 +99,7 @@ if(mysqli_num_rows($datatransaksi) > 0){
 
 
         <div style="display: flex; margin-top: 10px; margin-left: 20px;">
-            <h1><a href="transaksi.php" style="font-style: italic; font-weight: bolder; font-size: 20px; color: black;">Kembali ke dashboard</a></h1>
+            <h1><a href="transaction.php" style="font-style: italic; font-weight: bolder; font-size: 20px; color: black;">Kembali ke dashboard</a></h1>
         </div>
 
     
@@ -108,13 +111,13 @@ if(mysqli_num_rows($datatransaksi) > 0){
                 <div class="product-gallery">
                     <?php 
 
-                    if(empty($fotobukti)){
+                    if(!empty($fotobukti)){
                         ?>
-                            <img src="<?php echo $fotobukti; ?>?height=500&width=500" alt="Smartphone Model X" class="main-image">
+                            <img src="../images/<?php echo $fotobukti; ?>?height=500&width=500" alt="Smartphone Model X" class="main-image">
                         <?php  
                     }else{
                         ?>
-                            <img src="images/noimage.png?height=500&width=500" alt="No Image" class="main-image">
+                            <img src="../images/noimage.png?height=500&width=500" alt="No Image" class="main-image">
                         <?php  
                     }
 
@@ -129,41 +132,47 @@ if(mysqli_num_rows($datatransaksi) > 0){
                          <?php echo $formatharga; ?>
                     </div>
 
-                    <div class="product-price">
-                         <?php echo $formattotal; ?>
-                    </div>
-
                  
                     <?php 
 
                     $cekstatustransaksi = mysqli_query($koneksi, "SELECT * FROM transaksi WHERE id_transaksi = '$idtransaksi'");
                     if(mysqli_num_rows($cekstatustransaksi) > 0){
-                        ?>
-                        <div class="product-actions">
-                            <button class="buy-button" disabled style="background-color: grey;  color: white; pointer-events: none;">Beli Sekarang</button>
-                            <p style="color: grey; font-style: italic; font-size: 13px;"><span style="color: red; font-weight: bolder;">Note </span>: Anda masih memiliki transaksi yang belum diselesaikan</p>
-                        </div>
-                        <?php  
-                    }else{
-                    	$confirmapprove = "confirmprocess.php?string=approve&idproduk=$idproduk";
-                    	$confirmreject = "confirmprocess.php?string=reject&idproduk=$idproduk";
+
+                        $confirmapprove = "confirmfinaltransaction.php?string=approve&idtransaksi=$idtransaksi";
+                        $confirmreject = "confirmfinaltransaction.php?string=reject&idtransaksi=$idtransaksi";
 
                         ?>
-                       
-                        <script type="text/javascript">
-                        	function approved(){
-                        		window.location.href = "<?php echo $confirmapprove; ?>";
-                        	}
 
-                        	function rejected(){
-                        		window.location.href = "<?php echo $confirmreject; ?>"
-                        	}
+                          <script type="text/javascript">
+                            function approved(){
+                                window.location.href = "<?php echo $confirmapprove; ?>";
+                            }
+
+                            function rejected(){
+                                window.location.href = "<?php echo $confirmreject; ?>"
+                            }
                         </script>
 
                         <div class="product-actions">
+
                             <button class="buy-button" onclick="approved()" style="color: white; background-color: green; padding: 10px; border-radius: 10px;  border: none;">Approve</button>
+
                             <button class="buy-button" onclick="rejected()" style="color: white; background-color: red; padding: 10px; border-radius: 10px;  border: none;">Reject</button>
+
                         </div>
+
+
+
+
+                        <?php  
+                    }else{
+                        ?>
+
+                       <div class="product-actions">
+                            <button class="buy-button" disabled style="background-color: grey;  color: white; pointer-events: none;">Beli Sekarang</button>
+                            <p style="color: grey; font-style: italic; font-size: 13px;"><span style="color: red; font-weight: bolder;">Note </span>: Anda masih memiliki transaksi yang belum diselesaikan</p>
+                        </div>
+
                         <?php 
                     }
                      ?>

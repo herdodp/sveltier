@@ -12,6 +12,12 @@ if(!isset($_SESSION['username'])){
     <?php  
 }
 
+$usernameuser = $_SESSION['username'];
+//cek data user
+$cekdata = mysqli_query($koneksi, "SELECT id_user FROM account WHERE username = '$usernameuser'");
+while($datauser = mysqli_fetch_array($cekdata)){
+    $iduser = $datauser['id_user'];
+}
 
 $getidtransaksi = $_GET['idtransaksi'];
 
@@ -132,7 +138,7 @@ if(!empty($getidtransaksi)){
 
     </head>
 
-<body>
+<body style="background-color: white;">
 
 
 
@@ -178,23 +184,54 @@ if(!empty($getidtransaksi)){
 
 
 
+            <?php 
+
+            $cekstatustransaksi = mysqli_query($koneksi, "SELECT * FROM transaksi WHERE id_pembeli = '$iduser' and status_transaksi  = 'process'");
+            if(mysqli_num_rows($cekstatustransaksi) > 0){
+                ?>
+
+                <!-- open main -->
+                <main class="container" style="margin-top: 150px;">
+                    <h1>Bukti Transfer Dana</h1>
+                    <form class="upload-form" method="POST" action="" enctype="multipart/form-data">
+                        <div class="file-input-wrapper">
+                            <input type="none" id="file-input" name="buktitransfer" style="pointer-events: none; cursor:not-allowed;" disabled>
+                            <label for="file-input" class="file-input-label"><span style="color: red; font-weight:bolder;">Note</span> : Anda sudah mengirim bukti transfer</label>
+                        </div>
+                        <div id="file-name"></div>
+                        <button type="submit" class="submit-btn" disabled style="pointer-events: none; cursor:not-allowed; color: white; background-color: grey;">Kirim Bukti Transfer</button>
+                    </form>
+                </main>
+                <!-- close main -->
+
+                <?php  
+            }else{
+                ?>
+
+                <!-- open main -->
+                <main class="container" style="margin-top: 150px;">
+                    <h1>Bukti Transfer Dana</h1>
+                    <form class="upload-form" method="POST" action="" enctype="multipart/form-data">
+                        <div class="file-input-wrapper">
+                            <input type="file" id="file-input" name="buktitransfer"  accept="image/*" required>
+                            <label for="file-input" class="file-input-label">Choose a file</label>
+                        </div>
+                        <div id="file-name"></div>
+                        <button type="submit" name="submit" class="submit-btn">Kirim Bukti Transfer</button>
+                    </form>
+                </main>
+                <!-- close main -->
+
+                <?php  
+            }
 
 
 
+             ?>
 
-            <!-- open main -->
-            <main class="container">
-                <h1>Bukti Transfer Dana</h1>
-                <form class="upload-form" method="POST" action="" enctype="multipart/form-data">
-                    <div class="file-input-wrapper">
-                        <input type="file" id="file-input" name="buktitransfer"  accept="image/*" required>
-                        <label for="file-input" class="file-input-label">Choose a file</label>
-                    </div>
-                    <div id="file-name"></div>
-                    <button type="submit" name="submit" class="submit-btn">Kirim Bukti Transfer</button>
-                </form>
-            </main>
-            <!-- close main -->
+
+
+           
 
 
 

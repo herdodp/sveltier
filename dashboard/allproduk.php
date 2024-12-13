@@ -22,6 +22,11 @@ $rowcountup  = mysqli_fetch_assoc($jumlahprodukpending);
 $countrowup = $rowcountup['totalcountup'];
 
 
+//jumlah laporan pengguna
+$reportuser = mysqli_query($koneksi, "SELECT COUNT(*) AS laporanpengguna FROM userreport");
+$rowlaporanpengguna = mysqli_fetch_assoc($reportuser);
+$countrowuserreport = $rowlaporanpengguna['laporanpengguna'];
+
 
 
  ?>
@@ -42,7 +47,7 @@ $countrowup = $rowcountup['totalcountup'];
 
 
 
-        <!-- open side bar  -->
+         <!-- open side bar  -->
         <aside class="sidebar">
             <div class="sidebar-header">
                 <h2>SVELTIER</h2>
@@ -50,12 +55,13 @@ $countrowup = $rowcountup['totalcountup'];
             <nav class="sidebar-nav">
                 <ul>
                     <li><a href="dashadmin.php">Beranda</a></li>
-                    <li><a href="uploadproduk.php">Upload Produk <span style="color: yellow; font-weight: bolder;">( <?php echo $countrowup; ?> )</span></a></li>
+                    <li><a href="uploadproduk.php" >Upload Produk <span style="color: yellow; font-weight: bolder;">( <?php echo $countrowup; ?> )</span></a></li>
                     <li><a href="transaction.php">Transaksi <span style="color: yellow; font-weight: bolder;">( <?php echo $counttra; ?> )</span></a></li>
                     <li><a href="alluser.php">Daftar Pengguna</a></li>
-                    <li><a href="allproduk.php">Daftar Produk</a></li>
+                    <li><a href="allproduk.php" class="active">Daftar Produk</a></li>
                     <li><a href="history.php">Riwayat Transaksi</a></li>
-                    <li><a href="listadmin.php" class="active">Daftar Admin</a></li>
+                    <li><a href="listadmin.php">Daftar Admin</a></li>
+                   <li><a href="laporanpengguna.php">Laporan Pengguna<span style="color: yellow; font-weight: bolder;">( <?php echo $countrowuserreport; ?> )</span></a></li>
                 </ul>
             </nav>
         </aside>

@@ -50,8 +50,22 @@ $getstring2 = strip_tags($getstring1);
 $cekhistory = mysqli_query($koneksi, "SELECT * FROM history WHERE status = 'done'");
 
 
+//count transaction
+$jumlahtransaksi = mysqli_query($koneksi, "SELECT COUNT(*) AS totalcountra FROM transaksi");
+$rowcounttra = mysqli_fetch_assoc($jumlahtransaksi);
+$counttra = $rowcounttra['totalcountra'];
 
 
+//count upload product
+$jumlahprodukpending = mysqli_query($koneksi, "SELECT COUNT(*) AS totalcountup FROM produk WHERE status = 'pending'");
+$rowcountup  = mysqli_fetch_assoc($jumlahprodukpending);
+$countrowup = $rowcountup['totalcountup'];
+
+
+//jumlah laporan pengguna
+$reportuser = mysqli_query($koneksi, "SELECT COUNT(*) AS laporanpengguna FROM userreport");
+$rowlaporanpengguna = mysqli_fetch_assoc($reportuser);
+$countrowuserreport = $rowlaporanpengguna['laporanpengguna'];
 
 
  ?>
@@ -72,7 +86,7 @@ $cekhistory = mysqli_query($koneksi, "SELECT * FROM history WHERE status = 'done
 
 
 
-        <!-- open side bar  -->
+       <!-- open side bar  -->
         <aside class="sidebar">
             <div class="sidebar-header">
                 <h2>SVELTIER</h2>
@@ -80,12 +94,13 @@ $cekhistory = mysqli_query($koneksi, "SELECT * FROM history WHERE status = 'done
             <nav class="sidebar-nav">
                 <ul>
                     <li><a href="dashadmin.php">Beranda</a></li>
-                    <li><a href="uploadproduk.php">Upload Produk <span style="color: yellow; font-weight: bolder;">( <?php echo $countrowup; ?> )</span></a></li>
+                    <li><a href="uploadproduk.php" >Upload Produk <span style="color: yellow; font-weight: bolder;">( <?php echo $countrowup; ?> )</span></a></li>
                     <li><a href="transaction.php">Transaksi <span style="color: yellow; font-weight: bolder;">( <?php echo $counttra; ?> )</span></a></li>
                     <li><a href="alluser.php">Daftar Pengguna</a></li>
                     <li><a href="allproduk.php">Daftar Produk</a></li>
-                    <li><a href="history.php">Riwayat Transaksi</a></li>
-                    <li><a href="listadmin.php" class="active">Daftar Admin</a></li>
+                    <li><a href="history.php" class="active">Riwayat Transaksi</a></li>
+                    <li><a href="listadmin.php">Daftar Admin</a></li>
+                    <li><a href="laporanpengguna.php">Laporan Pengguna<span style="color: yellow; font-weight: bolder;">( <?php echo $countrowuserreport; ?> )</span></a></li>
                 </ul>
             </nav>
         </aside>
@@ -113,6 +128,7 @@ $cekhistory = mysqli_query($koneksi, "SELECT * FROM history WHERE status = 'done
                             <th>ID Pembeli</th>
                             <th>ID Produk</th>
                             <th>Status</th>
+                            <th>Waktu Transaksi</th>
                             <th>Waktu Selesai</th>
                             <th>Action</th>
                         </tr>
@@ -130,6 +146,7 @@ $cekhistory = mysqli_query($koneksi, "SELECT * FROM history WHERE status = 'done
                                 $idpembeli = $datahistory['id_pembeli'];
                                 $idproduk = $datahistory['id_produk'];
                                 $status = $datahistory['status'];
+                                $timetransaction = $datahistory['time_transaction'];
                                 $timecomplete = $datahistory['time_complete'];
                             ?>
 
@@ -140,6 +157,7 @@ $cekhistory = mysqli_query($koneksi, "SELECT * FROM history WHERE status = 'done
                             <td><?php echo $idpembeli; ?></td>
                             <td><?php echo $idproduk; ?></td>
                             <td><?php echo $status; ?></td>
+                            <td><?php echo $timetransaction; ?></td>
                             <td><?php echo $timecomplete; ?></td>
                             <td>
                                 <button type="button" onclick="window.location.href='editprofile.php?iduser=<?php echo $iduser; ?>'" style="color: white; font-weight: bolder; background-color: blue; border-radius: 10px; border: none; margin-left: 10px;padding: 10px;">Edit</button>

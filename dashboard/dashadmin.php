@@ -32,10 +32,21 @@ $rowproduk = mysqli_fetch_assoc($jumlahproduk);
 $countrowproduk = $rowproduk['totalproduk'];
 
 
+//jumlah transaksi pending
+$jumlahtransaksipending = mysqli_query($koneksi, "SELECT COUNT(*) AS totaltranpending FROM transaksi WHERE status_transaksi IN ('pending', 'process')");
+$rowtransaksipending = mysqli_fetch_assoc($jumlahtransaksipending);
+$counttranpending = $rowtransaksipending['totaltranpending'];
+
+
 //jumlah transasksi selesai
 $transaksiselesai = mysqli_query($koneksi, "SELECT COUNT(*) AS totaltransaksiselesai FROM history WHERE status = 'done'");
 $rowtransaksiselesai = mysqli_fetch_assoc($transaksiselesai);
 $counttransaksiselesai = $rowtransaksiselesai['totaltransaksiselesai'];
+
+//jumlah laporan pengguna
+$reportuser = mysqli_query($koneksi, "SELECT COUNT(*) AS laporanpengguna FROM userreport");
+$rowlaporanpengguna = mysqli_fetch_assoc($reportuser);
+$countrowuserreport = $rowlaporanpengguna['laporanpengguna'];
 
 
 
@@ -67,12 +78,12 @@ $counttransaksiselesai = $rowtransaksiselesai['totaltransaksiselesai'];
                 <ul>
                     <li><a href="dashadmin.php"  class="active">Beranda</a></li>
                     <li><a href="uploadproduk.php">Upload Produk <span style="color: yellow; font-weight: bolder;">( <?php echo $countrowup; ?> )</span></a></li>
-                    <li><a href="transaction.php">Transaksi <span style="color: yellow; font-weight: bolder;">( <?php echo $counttra; ?> )</span></a></li>
+                    <li><a href="transaction.php">Transaksi <span style="color: yellow; font-weight: bolder;">( <?php echo $counttranpending; ?> )</span></a></li>
                     <li><a href="alluser.php">Daftar Pengguna</a></li>
                     <li><a href="allproduk.php">Daftar Produk</a></li>
                     <li><a href="history.php">Riwayat Transaksi</a></li>
                     <li><a href="listadmin.php">Daftar Admin</a></li>
-                    <li><a href="laporanpengguna.php">Laporan Pengguna</a></li>
+                    <li><a href="laporanpengguna.php">Laporan Pengguna <span style="color: yellow; font-weight: bolder;">( <?php echo $countrowuserreport; ?> )</span></a></li>
                 </ul>
             </nav>
         </aside>
@@ -91,9 +102,32 @@ $counttransaksiselesai = $rowtransaksiselesai['totaltransaksiselesai'];
         <!-- open main -->
         <main class="main-content">
 
+            <script type="text/javascript">
+                function logoutdash(){
+                    var confirmlogout = confirm("Keluar dari halaman administrator ?");
+                    if(confirmlogout == true){
+                        window.location.href = "logoutdash.php";
+                    }
+                }
+            </script>
 
             <header class="main-header">
-                <h1>Beranda</h1>
+                <div  style="display: flex; flex-direction: row; align-items: center; ">
+                    <h1 style="margin-right: 10px;">Beranda</h1>
+
+                    <?php 
+
+                    if(isset($_SESSION['username'])){
+                        ?>
+                         <button onclick="logoutdash()" style="color: white; font-weight: bolder; padding: 10px; border-radius: 10px; margin-left: 10px; background-color: red; border: none; outline: none; outline-color: none;">Keluar</button>
+                        <?php  
+                    }else{
+
+                    }
+
+                     ?>
+                   
+                </div>    
             </header>
 
 

@@ -10,6 +10,22 @@ if(!isset($_SESSION['username'])){
 //ambil data upload produk yang pending
 $takeuser = mysqli_query($koneksi, "SELECT * FROM account WHERE role = 'common'");
 
+//count transaction
+$jumlahtransaksi = mysqli_query($koneksi, "SELECT COUNT(*) AS totalcountra FROM transaksi");
+$rowcounttra = mysqli_fetch_assoc($jumlahtransaksi);
+$counttra = $rowcounttra['totalcountra'];
+
+
+//count upload product
+$jumlahprodukpending = mysqli_query($koneksi, "SELECT COUNT(*) AS totalcountup FROM produk WHERE status = 'pending'");
+$rowcountup  = mysqli_fetch_assoc($jumlahprodukpending);
+$countrowup = $rowcountup['totalcountup'];
+
+
+//jumlah laporan pengguna
+$reportuser = mysqli_query($koneksi, "SELECT COUNT(*) AS laporanpengguna FROM userreport");
+$rowlaporanpengguna = mysqli_fetch_assoc($reportuser);
+$countrowuserreport = $rowlaporanpengguna['laporanpengguna'];
 
  ?>
 <!DOCTYPE html>
@@ -29,7 +45,7 @@ $takeuser = mysqli_query($koneksi, "SELECT * FROM account WHERE role = 'common'"
 
 
 
-        <!-- open side bar  -->
+         <!-- open side bar  -->
         <aside class="sidebar">
             <div class="sidebar-header">
                 <h2>SVELTIER</h2>
@@ -37,11 +53,13 @@ $takeuser = mysqli_query($koneksi, "SELECT * FROM account WHERE role = 'common'"
             <nav class="sidebar-nav">
                 <ul>
                     <li><a href="dashadmin.php">Beranda</a></li>
-                    <li><a href="uploadproduk.php">Upload Produk</a></li>
-                    <li><a href="transaction.php">Transaksi</a></li>
+                    <li><a href="uploadproduk.php" >Upload Produk <span style="color: yellow; font-weight: bolder;">( <?php echo $countrowup; ?> )</span></a></li>
+                    <li><a href="transaction.php">Transaksi <span style="color: yellow; font-weight: bolder;">( <?php echo $counttra; ?> )</span></a></li>
                     <li><a href="alluser.php" class="active">Daftar Pengguna</a></li>
+                    <li><a href="allproduk.php">Daftar Produk</a></li>
                     <li><a href="history.php">Riwayat Transaksi</a></li>
                     <li><a href="listadmin.php">Daftar Admin</a></li>
+                     <li><a href="laporanpengguna.php">Laporan Pengguna<span style="color: yellow; font-weight: bolder;">( <?php echo $countrowuserreport; ?> )</span></a></li>
                 </ul>
             </nav>
         </aside>

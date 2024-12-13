@@ -37,7 +37,7 @@ while($datauser = mysqli_fetch_array($conncekdatauser)){
 
     </head>
     
-    <body id="top">
+    <body id="top" style="background-color: white;">
 
         <main>
 
@@ -407,7 +407,7 @@ while($datauser = mysqli_fetch_array($conncekdatauser)){
                                                                 <div>
                                                                     <h5 class="mb-2"><?php echo $namaproduk; ?></h5>
                                                                     <p class="mb-0"><?php echo $deskripsi; ?></p>
-                                                                    <p class="mb-0">Rp <?php echo $hargaformat; ?></p>
+                                                                    <p class="mb-0"><?php echo $hargaformat; ?></p>
                                                                 </div>
                                                                 <!--<span class="badge bg-design rounded-pill ms-auto"></span>-->
                                                             </div>
